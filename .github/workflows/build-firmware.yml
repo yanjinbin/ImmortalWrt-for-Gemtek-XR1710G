@@ -51,6 +51,37 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
+      - name: 下载 mihomo 预编译二进制 (MetaCubeX releases, 供 nikki 使用, 不自行编译)
+        run: |
+          set -euo pipefail
+          VERSION="1.19.27"
+          URL="https://github.com/MetaCubeX/mihomo/releases/download/v${VERSION}/mihomo-linux-arm64-v${VERSION}.gz"
+          echo "下载: $URL"
+          curl -fL --retry 3 --retry-all-errors --connect-timeout 20 -o /tmp/mihomo.gz "$URL"
+          mkdir -p files/usr/libexec
+          gzip -dc /tmp/mihomo.gz > files/usr/libexec/mihomo
+          chmod 0755 files/usr/libexec/mihomo
+          mkdir -p files/usr/bin
+          ln -sf /usr/libexec/mihomo files/usr/bin/mihomo
+          file files/usr/libexec/mihomo
+          ls -lah files/usr/libexec/mihomo
+
+      - name: 预下载 nikki geox 数据集 (geoip/geosite/mmdb, 首次启动免下载)
+        run: |
+          set -euo pipefail
+          NIKKI_RUN_DIR="files/etc/nikki/run"
+          mkdir -p "$NIKKI_RUN_DIR"
+          wget -q --timeout=60 -t 3 "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat" -O "$NIKKI_RUN_DIR/geoip.dat"
+          wget -q --timeout=60 -t 3 "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat" -O "$NIKKI_RUN_DIR/geosite.dat"
+          wget -q --timeout=60 -t 3 "https://github.com/Loyalsoldier/geoip/releases/latest/download/Country.mmdb" -O "$NIKKI_RUN_DIR/country.mmdb"
+          for f in geoip.dat geosite.dat country.mmdb; do
+            if [ ! -s "$NIKKI_RUN_DIR/$f" ]; then
+              echo "错误: geox 数据集 $f 下载失败或为空, 终止构建"
+              exit 1
+            fi
+          done
+          ls -lah "$NIKKI_RUN_DIR"
+
       - name: Configure
         run: |
           cp config.seed .config

@@ -50,7 +50,7 @@
   - `001`: mt7996 PS sync TLV 修复（backport 上游 `06b69763f2`，修复 5GHz+6GHz MLO AP 硬锁 RX NAPI 路径问题）
 - base-files 定制：[01_leds](target/linux/airoha/an7581/base-files/etc/board.d/01_leds)、[02_network](target/linux/airoha/an7581/base-files/etc/board.d/02_network)、[03_wireless](target/linux/airoha/an7581/base-files/etc/uci-defaults/03_wireless)（SSID 分频段命名 + 30dBm 发射功率）、[airoha_fan](target/linux/airoha/an7581/base-files/etc/init.d/airoha_fan)、[99-ppe-reload](target/linux/airoha/an7581/base-files/etc/hotplug.d/net/99-ppe-reload)（无线接口创建时自动重载防火墙触发 PPE 绑定）、[platform.sh](target/linux/airoha/an7581/base-files/lib/upgrade/platform.sh)
 
-### 预装 LuCI 应用（26 个，全部含中文翻译）
+### 预装 LuCI 应用（10 个，全部含中文翻译）
 
 #### 设备专属（来自仓库 [package/](package/)）
 
@@ -59,24 +59,6 @@
 | `luci-app-airoha-npu` | [rchen14b/luci-app-airoha-npu](https://github.com/rchen14b/luci-app-airoha-npu) | SoC 状态监控 + 超频 |
 | `luci-app-airoha-fancontrol` | [Gilly1970/Gemtek-W1700K](https://github.com/Gilly1970/Gemtek-W1700K) | 风扇速度/温度控制 |
 | `luci-app-airoha-flowsense` | [Gilly1970/Gemtek-W1700K](https://github.com/Gilly1970/Gemtek-W1700K) | PPE 硬件 offload 监控 + 延迟检测（支持自定义 Ping 目标） |
-| `luci-app-lucky` | [sirpdboy/luci-app-lucky](https://github.com/sirpdboy/luci-app-lucky) | Lucky（DDNS/反代/端口转发） |
-
-#### 网络代理
-
-| 应用 | 核心依赖 | 功能 |
-|------|---------|------|
-| `luci-app-openclash` | mihomo | Clash 图形化客户端 |
-| `luci-app-passwall` | sing-box / xray-core / shadowsocks-rust / haproxy | 多协议代理客户端（含 Xray/SingBox/SS-Rust/Haproxy/Simple-Obfs/V2ray-Plugin） |
-| `luci-app-zerotier` | zerotier | ZeroTier 虚拟局域网 |
-
-#### DNS 相关
-
-| 应用 | 核心依赖 | 功能 |
-|------|---------|------|
-| `luci-app-adguardhome` | adguardhome | AdGuard Home 广告过滤 |
-| `luci-app-smartdns` | smartdns, smartdns-ui | SmartDNS DNS 加速/分流 |
-| `luci-app-ddns-go` | ddns-go | DDNS-Go 动态域名（支持阿里云/Cloudflare/DNSPod） |
-| `luci-app-ddns` | ddns-scripts | 传统 DDNS 脚本 |
 
 #### 网络工具
 
@@ -90,18 +72,15 @@
 | `luci-app-ttyd` | Web 终端 |
 | `luci-app-msd_lite` | MSD Lite |
 
-#### 系统工具
+### 移植插件（来自 ImmortalWrt-ImageBuilder 的魔改 fork）
 
-| 应用 | 功能 |
-|------|------|
-| `luci-app-autoreboot` | 定时重启 |
-| `luci-app-watchcat` | 网络看门狗 |
-| `luci-app-wol` | 网络唤醒 |
-| `luci-app-vlmcsd` | KMS 激活服务 |
-| `luci-app-rtp2httpd` | RTP 转 HTTP |
-| `luci-app-udpxy` | UDP 组播代理 |
-| `luci-app-wechatpush` | 微信推送通知 |
-| `luci-app-wifihistory` | WiFi 历史记录 |
+| 应用 | 来源 | 功能 |
+|------|------|------|
+| `luci-app-nikki` | [yanjinbin/OpenWrt-nikki](https://github.com/yanjinbin/OpenWrt-nikki) | 透明代理客户端（fork 魔改：配置文件批量上传、上传并选中重载、重载后清除旧连接）；运行时 mihomo 由构建工作流下载 MetaCubeX 预编译二进制 |
+| `luci-theme-uniwrt` | [yanjinbin/uniwrt-luci](https://github.com/yanjinbin/uniwrt-luci) | UniWRT Portal 主题（fork） |
+| `luci-theme-footstrap` | [yanjinbin/luci-theme-footstrap](https://github.com/yanjinbin/luci-theme-footstrap) | Footstrap 主题（fork 魔改：底部栏固件构建版本标记） |
+
+以上三个 fork 通过 [feeds.conf.default](feeds.conf.default) 的 `src-git` 源接入，构建时从源码编译；`nikki` / `luci-app-nikki` 依赖的 `mihomo` 由 [build-firmware.yml](.github/workflows/build-firmware.yml) 在构建前下载 MetaCubeX 预编译二进制到 `files/usr/bin/mihomo`，同时预下载 geox 数据集（geoip.dat / geosite.dat / Country.mmdb）到 `/etc/nikki/run`，首次启动免下载。
 
 ### 主要系统包
 
@@ -124,12 +103,8 @@
 **系统工具**
 - `bash` / `coreutils` / `curl` / `ip-full`
 - `htop` / `tcpdump` / `iperf3` / `ethtool-full` / `pciutils`
-- `luci-theme-argon` + `luci-theme-bootstrap`
+- `luci-theme-argon` + `luci-theme-bootstrap` + `luci-theme-footstrap` + `luci-theme-uniwrt`
 - `default-settings-chn`（中文默认设置）
-
-**代理核心**
-- `sing-box` / `xray-core` / `shadowsocks-rust-sslocal` / `shadowsocks-rust-ssserver`
-- `haproxy` / `chinadns-ng` / `geoview` / `dns2socks` / `microsocks` / `v2ray-plugin` / `ipt2socks`
 
 ## GitHub Actions 工作流
 
@@ -163,6 +138,8 @@ make defconfig
 make -j$(nproc)
 ```
 
+> 注：nikki 依赖 `/usr/bin/mihomo` 和 geox 数据集。CI 构建时 [build-firmware.yml](.github/workflows/build-firmware.yml) 会先下载 MetaCubeX 预编译二进制到 `files/usr/bin/`，并把 geox 数据集放入 `files/etc/nikki/run/`；本地构建请先执行相同步骤，否则 nikki 无法启动。
+
 构建环境要求：GNU/Linux 系统（Debian 11+ 推荐），AMD64 架构，至少 4GB RAM 和 25GB 可用磁盘空间。详细依赖请参考 [ImmortalWrt 官方文档](https://openwrt.org/docs/guide-developer/build-system/install-buildsystem)。
 
 ## 致谢
@@ -182,7 +159,9 @@ make -j$(nproc)
 ### LuCI 应用来源
 - [rchen14b/luci-app-airoha-npu](https://github.com/rchen14b/luci-app-airoha-npu) - Airoha NPU 状态监控（PR #4 合并中文翻译）
 - [Gilly1970/Gemtek-W1700K](https://github.com/Gilly1970/Gemtek-W1700K) - Airoha 风扇控制与 FlowSense（commit db3f1c8）
-- [sirpdboy/luci-app-lucky](https://github.com/sirpdboy/luci-app-lucky) - Lucky 多功能工具
+- [yanjinbin/OpenWrt-nikki](https://github.com/yanjinbin/OpenWrt-nikki) - nikki / luci-app-nikki 魔改 fork
+- [yanjinbin/uniwrt-luci](https://github.com/yanjinbin/uniwrt-luci) - luci-theme-uniwrt fork
+- [yanjinbin/luci-theme-footstrap](https://github.com/yanjinbin/luci-theme-footstrap) - luci-theme-footstrap fork
 
 ### 相关工具
 - [JetBrains](https://www.jetbrains.com/) - 开发工具支持
