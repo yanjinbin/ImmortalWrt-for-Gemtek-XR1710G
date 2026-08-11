@@ -29,6 +29,14 @@ on:
       pppoe_password:
         description: 'PPPoE 宽带密码（enable_pppoe=yes 时必填）'
         required: false
+      enable_ipv6:
+        description: '是否启用 IPv6（默认 no：关闭 WAN6 / LAN RA/DHCPv6 与 IPv6 防火墙）'
+        required: true
+        default: 'no'
+        type: choice
+        options:
+          - 'no'
+          - 'yes'
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -96,12 +104,13 @@ jobs:
           done
           ls -lah "$NIKKI_RUN_DIR"
 
-      - name: 写入 PPPoE 构建配置 (默认 DHCP, 选 yes 时必填账号密码)
+      - name: 写入构建配置 (PPPoE 默认 DHCP / IPv6 默认关闭, 可选开启)
         run: |
           set -euo pipefail
           ENABLE_PPPOE="${{ inputs.enable_pppoe }}"
           PPPOE_ACCOUNT="${{ inputs.pppoe_account }}"
           PPPOE_PASSWORD="${{ inputs.pppoe_password }}"
+          ENABLE_IPV6="${{ inputs.enable_ipv6 }}"
           if [ "$ENABLE_PPPOE" = "yes" ]; then
             if [ -z "$PPPOE_ACCOUNT" ] || [ -z "$PPPOE_PASSWORD" ]; then
               echo "错误: 启用 PPPoE 时必须填写宽带账号和密码"
@@ -112,13 +121,14 @@ jobs:
             echo "默认 DHCP 客户端 (不启用 PPPoE)"
           fi
           mkdir -p files/etc/config
-          cat > files/etc/config/pppoe-settings <<EOF
-enable_pppoe=${ENABLE_PPPOE}
-pppoe_account=${PPPOE_ACCOUNT}
-pppoe_password=${PPPOE_PASSWORD}
-EOF
-          echo "已写入 files/etc/config/pppoe-settings:"
+          printf 'enable_pppoe=%s\npppoe_account=%s\npppoe_password=%s\n' \
+            "$ENABLE_PPPOE" "$PPPOE_ACCOUNT" "$PPPOE_PASSWORD" \
+            > files/etc/config/pppoe-settings
+          printf 'enable_ipv6=%s\n' "$ENABLE_IPV6" > files/etc/config/ipv6-settings
+          echo "--- pppoe-settings ---"
           cat files/etc/config/pppoe-settings
+          echo "--- ipv6-settings ---"
+          cat files/etc/config/ipv6-settings
 
       - name: Configure
         run: |
