@@ -2,7 +2,7 @@
 
 > SoC: Airoha AN7581GT · 内核 6.18.41 · Wi-Fi 7（BE19000，2.4/5/6GHz 三频）· 构建于 @TIME@
 
-### 预装 LuCI 应用（10 个，全部含中文翻译）
+### 预装 LuCI 应用（9 个，全部含中文翻译）
 
 **设备专属**
 - `luci-app-airoha-npu` — SoC 状态监控 + 超频
@@ -10,7 +10,7 @@
 - `luci-app-airoha-flowsense` — PPE 硬件 offload 监控 + 延迟检测（支持自定义 Ping 目标）
 
 **网络工具**
-- `luci-app-upnp` / `luci-app-firewall`（firewall4/nftables）/ `luci-app-arpbind` / `luci-app-mlo`（Wi-Fi 7 多链路）/ `luci-app-package-manager`（APK）/ `luci-app-ttyd`（Web 终端）/ `luci-app-msd_lite`
+- `luci-app-upnp` / `luci-app-firewall`（firewall4/nftables）/ `luci-app-arpbind` / `luci-app-mlo`（Wi-Fi 7 多链路）/ `luci-app-package-manager`（APK）/ `luci-app-ttyd`（Web 终端）
 
 ### 移植的魔改插件（来自 ImmortalWrt-ImageBuilder）
 
@@ -33,7 +33,7 @@
 
 ### 说明
 
-- 本次构建已移除 16 个不再预装的 LuCI 应用及其核心依赖（DDNS / Lucky / UDPXY / KMS / 看门狗 / 组播等），需要时可通过系统内 APK 包管理器随时安装
+- 本次构建已移除 17 个不再预装的 LuCI 应用及其核心依赖（DDNS / Lucky / UDPXY / KMS / 看门狗 / 组播等），需要时可通过系统内 APK 包管理器随时安装
 - 设备专属 `luci-app-airoha-recovery`（U-Boot 恢复入口）一并预装
 
 ---

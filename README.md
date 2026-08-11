@@ -50,7 +50,7 @@
   - `001`: mt7996 PS sync TLV 修复（backport 上游 `06b69763f2`，修复 5GHz+6GHz MLO AP 硬锁 RX NAPI 路径问题）
 - base-files 定制：[01_leds](target/linux/airoha/an7581/base-files/etc/board.d/01_leds)、[02_network](target/linux/airoha/an7581/base-files/etc/board.d/02_network)、[03_wireless](target/linux/airoha/an7581/base-files/etc/uci-defaults/03_wireless)（SSID 分频段命名 + 30dBm 发射功率）、[airoha_fan](target/linux/airoha/an7581/base-files/etc/init.d/airoha_fan)、[99-ppe-reload](target/linux/airoha/an7581/base-files/etc/hotplug.d/net/99-ppe-reload)（无线接口创建时自动重载防火墙触发 PPE 绑定）、[platform.sh](target/linux/airoha/an7581/base-files/lib/upgrade/platform.sh)
 
-### 预装 LuCI 应用（10 个，全部含中文翻译）
+### 预装 LuCI 应用（9 个，全部含中文翻译）
 
 #### 设备专属（来自仓库 [package/](package/)）
 
@@ -70,7 +70,6 @@
 | `luci-app-mlo` | MLO（Wi-Fi 7 多链路操作） |
 | `luci-app-package-manager` | APK 包管理器 |
 | `luci-app-ttyd` | Web 终端 |
-| `luci-app-msd_lite` | MSD Lite |
 
 ### 移植插件（来自 ImmortalWrt-ImageBuilder 的魔改 fork）
 
