@@ -12,7 +12,7 @@
 
 基于 [ImmortalWrt](https://github.com/immortalwrt/immortalwrt) 为 Gemtek XR1710G（Brightspeed XR1710G）路由器定制的固件。
 
-默认登录地址：http://192.168.1.1 或 http://immortalwrt.lan，用户名：**root**，密码：*无*。无线初始密码（2.4/5/6G 统一）：`yjb123456`。
+默认登录地址：http://192.168.1.1 或 http://immortalwrt.lan，用户名：**root**，密码：*无*。无线 SSID：`XR1710G-2G` / `XR1710G-5G` / `XR1710G-6G`（前缀 `XR1710G`，分频段命名），初始密码（2.4/5/6G 统一）：`yjb123456`。
 
 ## 设备规格
 
