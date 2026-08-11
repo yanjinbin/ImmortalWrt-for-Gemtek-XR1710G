@@ -126,16 +126,28 @@ jobs:
         id: release_body
         env:
           RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
+          BUILD_DATE: ${{ steps.date.outputs.date }}
+          BUILD_COMMIT: ${{ steps.commit.outputs.short }}
         run: |
+          BUILD_TIME_BJ="$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S' 2>/dev/null || date -u -d '+8 hours' '+%Y-%m-%d %H:%M:%S')"
+          sed -e "s/@DATE@/${BUILD_DATE}/g" \
+              -e "s/@COMMIT@/${BUILD_COMMIT}/g" \
+              -e "s/@TIME@/${BUILD_TIME_BJ}/g" \
+              .github/RELEASE_BODY.md > /tmp/release_body.md
+          if [ -n "${RELEASE_NOTES}" ]; then
+            {
+              echo ""
+              printf '%s\n' "${RELEASE_NOTES}"
+            } >> /tmp/release_body.md
+          fi
           {
-            printf '%s\n' "$RELEASE_NOTES"
             echo ""
             echo "---"
             echo ""
             echo "如果您觉得对您有帮助，请我喝杯咖啡吧，让我更有动力持续更新。"
             echo ""
             echo '<img width="400" height="400" alt="c6ea388c976395326514814f80d512d5" src="https://github.com/user-attachments/assets/0ac90d58-ac73-4dc1-b926-276e539e5d0f" />'
-          } > /tmp/release_body.md
+          } >> /tmp/release_body.md
           {
             echo "body<<EOF"
             cat /tmp/release_body.md

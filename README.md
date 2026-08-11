@@ -2,8 +2,8 @@
 
 # ImmortalWrt for Gemtek XR1710G
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/naoki66/ImmortalWrt-for-Gemtek-XR1710G/build-firmware.yml?branch=master&label=Build)](https://github.com/naoki66/ImmortalWrt-for-Gemtek-XR1710G/actions/workflows/build-firmware.yml)
-[![Sync Status](https://img.shields.io/github/actions/workflow/status/naoki66/ImmortalWrt-for-Gemtek-XR1710G/sync-upstream.yml?branch=master&label=Sync)](https://github.com/naoki66/ImmortalWrt-for-Gemtek-XR1710G/actions/workflows/sync-upstream.yml)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/yanjinbin/ImmortalWrt-for-Gemtek-XR1710G/build-firmware.yml?branch=master&label=Build)](https://github.com/yanjinbin/ImmortalWrt-for-Gemtek-XR1710G/actions/workflows/build-firmware.yml)
+[![Sync Status](https://img.shields.io/github/actions/workflow/status/yanjinbin/ImmortalWrt-for-Gemtek-XR1710G/sync-upstream.yml?branch=master&label=Sync)](https://github.com/yanjinbin/ImmortalWrt-for-Gemtek-XR1710G/actions/workflows/sync-upstream.yml)
 [![Upstream](https://img.shields.io/badge/upstream-immortalwrt%40e5ca16047f-blue)](https://github.com/immortalwrt/immortalwrt)
 [![Synced](https://img.shields.io/badge/synced-2026--08--03%20merged-brightgreen)](#)
 [![Kernel](https://img.shields.io/badge/kernel-6.18.41-red)](https://www.kernel.org/)
@@ -122,14 +122,14 @@
 
 ## 下载
 
-- [Releases 页面](https://github.com/naoki66/ImmortalWrt-for-Gemtek-XR1710G/releases)
+- [Releases 页面](https://github.com/yanjinbin/ImmortalWrt-for-Gemtek-XR1710G/releases)
 - 固件文件：`immortalwrt-airoha-an7581-gemtek_xr1710g-ubi-squashfs-sysupgrade.itb`
 - 升级方法：LuCI → 系统 → 备份/升级 → 刷写固件
 
 ## 本地构建（可选）
 
 ```bash
-git clone https://github.com/naoki66/ImmortalWrt-for-Gemtek-XR1710G.git
+git clone https://github.com/yanjinbin/ImmortalWrt-for-Gemtek-XR1710G.git
 cd ImmortalWrt-for-Gemtek-XR1710G
 ./scripts/feeds update -a
 ./scripts/feeds install -a
