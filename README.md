@@ -115,6 +115,15 @@
 
 **构建配置**：仓库根目录的 [config.seed](config.seed) 是完整配置文件，Action 自动执行 `cp config.seed .config && make defconfig`。
 
+**构建选项**（build-firmware.yml 手动触发时填写）：
+
+| 选项 | 说明 |
+|------|------|
+| `release_type` | `none` 仅构建不发布；`release` 构建并发布正式 Release；`prerelease` 构建并发布预发布 |
+| `release_notes` | 可选备注，附加在 Release 说明末尾 |
+| `enable_pppoe` | 默认 `no`（WAN 为 DHCP 客户端，不拨号）；选 `yes` 启用 PPPoE 拨号 |
+| `pppoe_account` / `pppoe_password` | 选 `enable_pppoe=yes` 时的宽带账号和密码（必填，缺任一将终止构建） |
+
 **Release 格式**：
 - Tag：`YYYYMMDD-<short-hash>`
 - 名称：`YYYYMMDD - XR1710G Build (<short-hash>)`

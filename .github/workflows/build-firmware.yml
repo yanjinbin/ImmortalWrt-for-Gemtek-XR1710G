@@ -15,6 +15,20 @@ on:
       release_notes:
         description: 'Release Notes'
         required: false
+      enable_pppoe:
+        description: '是否配置 PPPoE 拨号（默认 DHCP 客户端，不启用 PPPoE）'
+        required: true
+        default: 'no'
+        type: choice
+        options:
+          - 'no'
+          - 'yes'
+      pppoe_account:
+        description: 'PPPoE 宽带账号（enable_pppoe=yes 时必填）'
+        required: false
+      pppoe_password:
+        description: 'PPPoE 宽带密码（enable_pppoe=yes 时必填）'
+        required: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -81,6 +95,30 @@ jobs:
             fi
           done
           ls -lah "$NIKKI_RUN_DIR"
+
+      - name: 写入 PPPoE 构建配置 (默认 DHCP, 选 yes 时必填账号密码)
+        run: |
+          set -euo pipefail
+          ENABLE_PPPOE="${{ inputs.enable_pppoe }}"
+          PPPOE_ACCOUNT="${{ inputs.pppoe_account }}"
+          PPPOE_PASSWORD="${{ inputs.pppoe_password }}"
+          if [ "$ENABLE_PPPOE" = "yes" ]; then
+            if [ -z "$PPPOE_ACCOUNT" ] || [ -z "$PPPOE_PASSWORD" ]; then
+              echo "错误: 启用 PPPoE 时必须填写宽带账号和密码"
+              exit 1
+            fi
+            echo "PPPoE 已启用: $PPPOE_ACCOUNT"
+          else
+            echo "默认 DHCP 客户端 (不启用 PPPoE)"
+          fi
+          mkdir -p files/etc/config
+          cat > files/etc/config/pppoe-settings <<EOF
+enable_pppoe=${ENABLE_PPPOE}
+pppoe_account=${PPPOE_ACCOUNT}
+pppoe_password=${PPPOE_PASSWORD}
+EOF
+          echo "已写入 files/etc/config/pppoe-settings:"
+          cat files/etc/config/pppoe-settings
 
       - name: Configure
         run: |
