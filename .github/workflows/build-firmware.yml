@@ -195,14 +195,6 @@ jobs:
             } >> /tmp/release_body.md
           fi
           {
-            echo ""
-            echo "---"
-            echo ""
-            echo "如果您觉得对您有帮助，请我喝杯咖啡吧，让我更有动力持续更新。"
-            echo ""
-            echo '<img width="400" height="400" alt="c6ea388c976395326514814f80d512d5" src="https://github.com/user-attachments/assets/0ac90d58-ac73-4dc1-b926-276e539e5d0f" />'
-          } >> /tmp/release_body.md
-          {
             echo "body<<EOF"
             cat /tmp/release_body.md
             echo "EOF"
