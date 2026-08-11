@@ -4,7 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       release_type:
-        description: 'Release Type'
+        description: |
+          发布类型:
+          - release: 构建固件并发布正式 Release (默认)
+          - prerelease: 构建固件并发布预发布
+          - none: 仅构建, 不发布
         required: true
         default: 'release'
         type: choice
@@ -13,7 +17,9 @@ on:
           - prerelease
           - none
       release_notes:
-        description: 'Release Notes'
+        description: |
+          可选备注, 会附加在发布页说明末尾
+          (发布页正文为自动生成的固件说明, 无需重复填写)
         required: false
       enable_pppoe:
         description: '是否配置 PPPoE 拨号（默认 DHCP 客户端，不启用 PPPoE）'
